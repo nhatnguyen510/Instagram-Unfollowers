@@ -10,6 +10,8 @@ import Bluebird from "bluebird";
 import inquirer from "inquirer";
 import { writeFileSync, readFileSync, existsSync } from "fs";
 import { ig } from "../APIClient/index.js";
+import CryptoJS from "crypto-js";
+import { parse, stringify } from "flatted/esm";
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
@@ -24,7 +26,7 @@ export const login = async (req, res) => {
     const user = await ig.account.login(username, password);
 
     res.status(200).json({
-      user,
+      ...user,
     });
   })
     .catch(IgLoginTwoFactorRequiredError, async (err) => {
@@ -75,12 +77,12 @@ export const loginWithTwoFactors = async (req, res) => {
   } = req.body;
 
   Bluebird.try(async () => {
-    const data = await loginTwoFactors(
+    const data = await ig.account.twoFactorLogin({
       username,
-      two_factor_identifier,
+      twoFactorIdentifier: two_factor_identifier,
       verificationCode,
-      verificationMethod
-    );
+      verificationMethod,
+    });
 
     res.status(200).json({
       message: "Login 2FA Successfully!!!",
@@ -105,6 +107,28 @@ export const logout = async (req, res) => {
       e,
     });
   });
+};
+
+export const encryptUser = async (req, res) => {
+  const { user } = req.body;
+
+  const encryptedUser = CryptoJS.AES.encrypt(
+    JSON.stringify(user),
+    process.env.SECRET_KEY
+  );
+
+  res.status(200).json({ encryptedUser: encryptedUser.toString() });
+};
+
+export const decryptUser = (req, res) => {
+  const { encryptedUser } = req.body;
+
+  const decryptedUser = CryptoJS.AES.decrypt(
+    encryptedUser,
+    process.env.SECRET_KEY
+  ).toString(CryptoJS.enc.Utf8);
+
+  res.status(200).json({ decryptedUser: JSON.parse(decryptedUser) });
 };
 
 async function saveState(ig) {
@@ -134,6 +158,7 @@ async function readState(ig) {
   const { cookies, state } = JSON.parse(
     readFileSync("state.json", { encoding: "utf8" })
   );
+
   ig.state.deviceString = state.deviceString;
   ig.state.deviceId = state.deviceId;
   ig.state.uuid = state.uuid;

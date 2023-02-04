@@ -13,13 +13,13 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import axios from "axios";
 import { useState } from "react";
 import { useContext } from "react";
 import { AppContext } from "../context/AppProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Loading from "../components/Loading";
+import { loginUser } from "../api/user";
 
 const styles = {
   paperContainer: {
@@ -43,10 +43,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user.username) {
-      console.log(user);
+    if (Object.keys(user).length) {
       navigate("/");
-      return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -56,17 +54,11 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const { data } = await axios.post("http://localhost:5000/api/v1/login", {
-        username,
-        password,
-      });
+      const userInfo = await loginUser(username, password);
 
-      setUser((prevUser) => ({ ...prevUser, ...data.user }));
-    } catch ({
-      response: {
-        data: { message },
-      },
-    }) {
+      setUser((prevUser) => ({ ...prevUser, ...userInfo }));
+    } catch (e) {
+      let message = e?.response.data.message;
       setErrMessage(message);
     }
     setIsLoading(false);
