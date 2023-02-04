@@ -11,7 +11,6 @@ import inquirer from "inquirer";
 import { writeFileSync, readFileSync, existsSync } from "fs";
 import { ig } from "../APIClient/index.js";
 import CryptoJS from "crypto-js";
-import { parse, stringify } from "flatted/esm";
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
