@@ -1,7 +1,8 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
-import Login from "../pages/login";
-import Home from "../pages/home";
+import Login from "../pages/Login";
+import Home from "../pages/Home";
 import ProtectedRoute from "./ProtectedRoute";
+import News from "../pages/News";
 
 const AuthLayout = () => {
   return <Outlet />;
@@ -21,6 +22,10 @@ export default createBrowserRouter([
           {
             element: <Home />,
             path: "/",
+          },
+          {
+            element: <News />,
+            path: "/news",
           },
         ],
       },

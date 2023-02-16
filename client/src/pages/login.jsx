@@ -38,16 +38,17 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errMessage, setErrMessage] = useState("");
 
-  const { user, setUser, isLoading, setIsLoading } = useContext(AppContext);
+  const { setUser, isLoading, setIsLoading, isLoggedIn } =
+    useContext(AppContext);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (Object.keys(user).length) {
+    if (isLoggedIn.current) {
       navigate("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [isLoggedIn.current]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +58,8 @@ const Login = () => {
       const userInfo = await loginUser(username, password);
 
       setUser((prevUser) => ({ ...prevUser, ...userInfo }));
+
+      isLoggedIn.current = true;
     } catch (e) {
       let message = e?.response.data.message;
       setErrMessage(message);

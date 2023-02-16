@@ -1,31 +1,40 @@
-import React, { createContext, useState, useEffect } from "react";
-import { fetchDecryptedUser, fetchEncryptedUser } from "../api/user";
+import React, { createContext, useState, useEffect, useRef } from "react";
 
 export const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const isLoggedIn = useRef(false);
 
   useEffect(() => {
-    const encryptedUser = localStorage.getItem("user");
-    if (encryptedUser) {
-      fetchDecryptedUser(encryptedUser).then(({ decryptedUser }) => {
-        setUser((prevUser) => ({ ...prevUser, ...decryptedUser }));
-      });
+    const ParsedUser = JSON.parse(localStorage.getItem("user"));
+    if (ParsedUser) {
+      isLoggedIn.current = true;
+      setUser((prevUser) => ({ ...prevUser, ...ParsedUser }));
+    } else {
+      isLoggedIn.current = false;
+      setUser({});
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn.current]);
 
   useEffect(() => {
     if (Object.keys(user).length !== 0) {
-      fetchEncryptedUser(user).then(({ encryptedUser }) => {
-        localStorage.setItem("user", encryptedUser);
-      });
+      localStorage.setItem("user", JSON.stringify(user));
     }
   }, [user]);
 
   return (
-    <AppContext.Provider value={{ user, setUser, isLoading, setIsLoading }}>
+    <AppContext.Provider
+      value={{
+        user,
+        setUser,
+        isLoggedIn,
+        isLoading,
+        setIsLoading,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

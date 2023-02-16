@@ -3,9 +3,11 @@ import { Outlet, Navigate } from "react-router-dom";
 import { AppContext } from "../context/AppProvider";
 
 function ProtectedRoute({ children }) {
-  const { user } = useContext(AppContext);
+  const { isLoggedIn } = useContext(AppContext);
 
-  if (Object.keys(user).length === 0) {
+  console.log(isLoggedIn);
+
+  if (!isLoggedIn.current) {
     return <Navigate to="/login" replace />;
   }
 

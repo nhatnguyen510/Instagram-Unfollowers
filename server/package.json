@@ -20,6 +20,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
+    "helmet": "^6.0.1",
     "inquirer": "^9.1.4",
     "instagram-private-api": "^1.45.3",
     "lodash": "^4.17.21",
