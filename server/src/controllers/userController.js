@@ -183,28 +183,39 @@ export const findUnfollowers = async (req, res) => {
       ({ username }) => !followersUsername.has(username)
     );
 
-    const usersNotFollowingYou = notFollowingYou.map((user) => user.username);
+    // const usersNotFollowingYou = notFollowingYou.map((user) => user.username);
 
     res.status(200).json({
-      usersNotFollowingYou,
+      notFollowingYou,
     });
   }).catch(IgCookieNotFoundError, (e) => {
     res.status(400).json({
       message: e.message,
     });
   });
-  // for (const user of notFollowingYou) {
-  //   if (user.username == "cristiano") {
-  //     await ig.friendship.destroy(user.pk);
-  //     console.log(`unfollowed ${user.username}`);
-  //     const time = Math.round(Math.random() * 6000) + 1000;
-  //     await new Promise((resolve) => setTimeout(resolve, time));
-  //   }
-  //   /*
-  //       Time, is the delay which is between 1 second and 7 seconds.
-  //       Creating a promise to stop the loop to avoid api spam
-  //    */
-  // }
+};
+
+export const unfollowUsers = async (req, res) => {
+  const { notFollowingYou } = req.body;
+  const unfollowedUsers = [];
+
+  console.log(notFollowingYou);
+
+  for (const user of notFollowingYou) {
+    await ig.friendship.destroy(user.pk);
+    unfollowedUsers.push(user.username);
+    console.log(`unfollowed ${user.username}`);
+    const time = Math.round(Math.random() * 6000) + 1000;
+    await new Promise((resolve) => setTimeout(resolve, time));
+    /*
+        Time, is the delay which is between 1 second and 7 seconds.
+        Creating a promise to stop the loop to avoid api spam
+     */
+  }
+
+  res.status(200).json({
+    unfollowedUsers,
+  });
 };
 
 async function getAllItemsFromFeed(feed) {

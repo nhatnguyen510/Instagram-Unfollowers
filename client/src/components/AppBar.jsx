@@ -5,13 +5,12 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useContext } from "react";
 import { AppContext } from "../context/AppProvider";
 import { logoutUser } from "../api/user";
@@ -44,14 +43,25 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={{
+        backgroundImage: "linear-gradient(to right, #fc5c7d, #6a82fb)",
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar
           disableGutters
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Box sx={{ display: "flex" }}>
-            <AdbIcon sx={{ display: "flex", mr: 1 }} />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <InstagramIcon fontSize="large" sx={{ display: "flex", mr: 1 }} />
             <Typography
               variant="h5"
               noWrap

@@ -1,19 +1,23 @@
-import { Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import React, { useContext } from "react";
 import ResponsiveAppBar from "../components/AppBar";
+import UnfollowerList from "../components/UnfollowerList";
 import { AppContext } from "../context/AppProvider";
 
 const Home = () => {
-  const { user } = useContext(AppContext);
-
-  console.log(user);
-
-  const { pk_id, username, profile_pic_url } = user;
-
   return (
     <>
-      {/* <Typography variant="h5">Hello {username} !</Typography>; */}
       <ResponsiveAppBar />
+      <Container
+        sx={{
+          my: 3,
+          minHeight: `calc(100vh - 64px)`,
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <UnfollowerList />
+      </Container>
     </>
   );
 };

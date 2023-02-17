@@ -70,7 +70,7 @@ const Login = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   return (
-    <div>
+    <>
       {isLoading && <Loading />}
 
       <Box
@@ -185,7 +185,7 @@ const Login = () => {
           </Grid>
         </Grid>
       </Box>
-    </div>
+    </>
   );
 };
 

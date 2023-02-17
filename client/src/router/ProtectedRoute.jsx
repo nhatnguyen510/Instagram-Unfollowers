@@ -5,8 +5,6 @@ import { AppContext } from "../context/AppProvider";
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useContext(AppContext);
 
-  console.log(isLoggedIn);
-
   if (!isLoggedIn.current) {
     return <Navigate to="/login" replace />;
   }
