@@ -8,7 +8,6 @@ import Menu from "@mui/material/Menu";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useContext } from "react";
@@ -16,11 +15,7 @@ import { AppContext } from "../context/AppProvider";
 import { logoutUser } from "../api/user";
 import { useNavigate } from "react-router-dom";
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { user, setUser, isLoggedIn } = useContext(AppContext);
   const navigate = useNavigate();
@@ -71,8 +66,9 @@ function ResponsiveAppBar() {
                 mr: 2,
                 display: "flex",
                 justifyContent: { xs: "center", md: "left" },
-                //   fontFamily: "monospace",
+                fontFamily: "Mynerve",
                 fontWeight: 700,
+                fontSize: "28px",
                 //   letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",

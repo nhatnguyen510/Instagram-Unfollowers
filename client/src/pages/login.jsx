@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Loading from "../components/Loading";
 import { loginUser } from "../api/user";
+import { Title } from "../components/Title";
 
 const styles = {
   paperContainer: {
@@ -78,7 +79,7 @@ const Login = () => {
         justifyContent="center"
         alignItems="center"
         height="100vh"
-        p="0 50px"
+        p="0 30px"
       >
         <Grid
           container
@@ -106,11 +107,14 @@ const Login = () => {
             square
             p={6}
           >
+            <Title />
+
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
+                mt: 4,
               }}
             >
               <Typography component="h1" variant="h6">

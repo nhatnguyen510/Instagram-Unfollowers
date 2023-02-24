@@ -14,9 +14,35 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { findUnfollowers, unfollowUsers } from "../api/user";
 import { AppContext } from "../context/AppProvider";
 import Loading from "./Loading";
+import { styled } from "@mui/material/styles";
+import { Typography } from "@mui/material";
+
+const DesktopIcon = styled("div")(({ theme }) => ({
+  [theme.breakpoints.down("md")]: {
+    display: "none",
+  },
+  [theme.breakpoints.up("md")]: {
+    display: "flex",
+  },
+}));
+
+const MobileIcon = styled("div")(({ theme }) => ({
+  [theme.breakpoints.down("md")]: {
+    display: "flex",
+  },
+  [theme.breakpoints.up("md")]: {
+    display: "none",
+  },
+}));
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -40,17 +66,22 @@ export default function UnfollowerList() {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const [alertOpen, setAlertOpen] = useState(false);
+
   const [unfollowedUsersData, setUnfollowedUsersData] = useState([]);
 
   const { isLoading, setIsLoading } = useContext(AppContext);
 
   const handleFindUnfollowers = async () => {
-    setIsLoading(true);
-    const { notFollowingYou } = await findUnfollowers();
-    setUnfollowedUsersData(notFollowingYou);
-    const UnfollowedUserList = notFollowingYou.map((user) => user.username);
-    setLeft((prev) => [...prev, ...UnfollowedUserList]);
-    setIsLoading(false);
+    if (!unfollowedUsersData.length) {
+      setIsLoading(true);
+      const { notFollowingYou } = await findUnfollowers();
+      setUnfollowedUsersData(notFollowingYou);
+      const UnfollowedUserList = notFollowingYou.map((user) => user.username);
+      console.log(UnfollowedUserList);
+      setLeft((prev) => [...prev, ...UnfollowedUserList]);
+      setIsLoading(false);
+    }
   };
 
   const handleUnfollowUsers = async () => {
@@ -63,9 +94,11 @@ export default function UnfollowerList() {
     const { unfollowedUsers } = await unfollowUsers(checkedUnfollowedUsers);
     console.log(unfollowedUsers);
 
-    setRight([not(right, rightChecked)]);
+    setRight([...not(right, rightChecked)]);
 
     setIsLoading(false);
+
+    setAlertOpen(true);
   };
 
   const handleOpenDialog = () => {
@@ -166,7 +199,7 @@ export default function UnfollowerList() {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`${value + 1}`} />
+              <ListItemText id={labelId} primary={`${value}`} />
             </ListItem>
           );
         })}
@@ -176,6 +209,16 @@ export default function UnfollowerList() {
 
   return (
     <>
+      {alertOpen && (
+        <Snackbar
+          open={alertOpen}
+          onClose={() => setAlertOpen(false)}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <Alert severity="success">Unfollow successfully!</Alert>
+        </Snackbar>
+      )}
       {isLoading && <Loading />}
       <Grid
         container
@@ -206,26 +249,45 @@ export default function UnfollowerList() {
           </Button>
         </Grid>
         <Grid item>
-          <Grid container direction="column" alignItems="center">
+          <Grid
+            container
+            alignItems="center"
+            sx={{
+              flexDirection: {
+                md: "column",
+                xs: "row",
+              },
+              gap: 2,
+              my: 2,
+            }}
+          >
             <Button
-              sx={{ my: 0.5 }}
               variant="outlined"
               size="small"
               onClick={handleCheckedRight}
               disabled={leftChecked.length === 0}
               aria-label="move selected right"
             >
-              &gt;
+              <MobileIcon>
+                <KeyboardArrowDownIcon />
+              </MobileIcon>
+              <DesktopIcon>
+                <KeyboardArrowRightIcon />
+              </DesktopIcon>
             </Button>
             <Button
-              sx={{ my: 0.5 }}
               variant="outlined"
               size="small"
               onClick={handleCheckedLeft}
               disabled={rightChecked.length === 0}
               aria-label="move selected left"
             >
-              &lt;
+              <MobileIcon>
+                <KeyboardArrowUpIcon />
+              </MobileIcon>
+              <DesktopIcon>
+                <KeyboardArrowLeftIcon />
+              </DesktopIcon>
             </Button>
           </Grid>
         </Grid>
@@ -247,16 +309,23 @@ export default function UnfollowerList() {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle id="alert-dialog-title">
-              {"Are you sure to unfollow these users?"}
+            <DialogTitle id="alert-dialog-title" sx={{ fontWeight: "bold" }}>
+              {"Are You Sure You Want to Unfollow These Users?"}
             </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                You will not follow these users after clicking this button.
-              </DialogContentText>
+              <Typography component="span" variant="body1">
+                Are you sure you want to unfollow the selected users:
+                <DialogContentText
+                  id="alert-dialog-descriptyion"
+                  sx={{ fontWeight: "bold", my: 2 }}
+                >
+                  {rightChecked.join(", ")}
+                </DialogContentText>
+                This process will take a few minutes to complete.
+              </Typography>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseDialog}>Disagree</Button>
+              <Button onClick={handleCloseDialog}>Cancel</Button>
               <Button
                 onClick={() => {
                   handleCloseDialog();
@@ -264,7 +333,7 @@ export default function UnfollowerList() {
                 }}
                 autoFocus
               >
-                Agree
+                Unfollow
               </Button>
             </DialogActions>
           </Dialog>
