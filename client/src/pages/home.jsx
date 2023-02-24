@@ -1,6 +1,7 @@
 import { Box, Container, Typography } from "@mui/material";
 import React, { useContext } from "react";
 import ResponsiveAppBar from "../components/AppBar";
+import Footer from "../components/Footer";
 import UnfollowerList from "../components/UnfollowerList";
 import { AppContext } from "../context/AppProvider";
 
@@ -18,6 +19,7 @@ const Home = () => {
       >
         <UnfollowerList />
       </Container>
+      <Footer />
     </>
   );
 };
