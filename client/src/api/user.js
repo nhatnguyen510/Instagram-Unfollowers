@@ -35,19 +35,3 @@ export const unfollowUsers = async (users) => {
 
   return unfollowedUsers;
 };
-
-// export const fetchEncryptedUser = async (user) => {
-//   const { data } = await axios.post("http://localhost:5000/api/v1/encrypt", {
-//     user,
-//   });
-
-//   return data;
-// };
-
-// export const fetchDecryptedUser = async (encryptedUser) => {
-//   const { data } = await axios.post("http://localhost:5000/api/v1/decrypt", {
-//     encryptedUser,
-//   });
-
-//   return data;
-// };

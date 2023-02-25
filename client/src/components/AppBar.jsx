@@ -17,10 +17,10 @@ import { useNavigate } from "react-router-dom";
 
 function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const { user, setUser, isLoggedIn } = useContext(AppContext);
+  const { user, isLoggedIn } = useContext(AppContext);
   const navigate = useNavigate();
 
-  const { pk_id, username, profile_pic_url } = user;
+  const { username } = user;
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -44,10 +44,21 @@ function ResponsiveAppBar() {
         backgroundImage: "linear-gradient(to right, #fc5c7d, #6a82fb)",
       }}
     >
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        sx={{
+          paddingLeft: {
+            md: 4,
+            xs: 0,
+          },
+        }}
+      >
         <Toolbar
           disableGutters
-          sx={{ display: "flex", justifyContent: "space-between" }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
         >
           <Box
             sx={{

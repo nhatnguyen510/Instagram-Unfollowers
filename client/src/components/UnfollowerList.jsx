@@ -209,16 +209,18 @@ export default function UnfollowerList() {
 
   return (
     <>
-      {alertOpen && (
+      {
         <Snackbar
           open={alertOpen}
           onClose={() => setAlertOpen(false)}
           autoHideDuration={6000}
           anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         >
-          <Alert severity="success">Unfollow successfully!</Alert>
+          <Alert severity="success">
+            Unfollow successfully. You can check your Instagram Following!
+          </Alert>
         </Snackbar>
-      )}
+      }
       {isLoading && <Loading />}
       <Grid
         container
@@ -233,6 +235,11 @@ export default function UnfollowerList() {
           transform: {
             md: "scale(1.3)",
             xs: "scale(1)",
+          },
+          maxHeight: "100%",
+          mt: {
+            md: 8,
+            xs: 1,
           },
         }}
       >

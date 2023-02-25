@@ -24,7 +24,7 @@ import { Title } from "../components/Title";
 
 const styles = {
   paperContainer: {
-    backgroundImage: `url(${require("../images/background.JPG")})`,
+    backgroundImage: `url(${require("../images/instagram-background.jpeg")})`,
     height: 800,
     backgroundSize: "cover",
     backgroundPosition: "center",
