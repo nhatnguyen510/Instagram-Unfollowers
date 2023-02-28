@@ -78,8 +78,7 @@ export default function UnfollowerList() {
       const { notFollowingYou } = await findUnfollowers();
       setUnfollowedUsersData(notFollowingYou);
       const UnfollowedUserList = notFollowingYou.map((user) => user.username);
-      console.log(UnfollowedUserList);
-      setLeft((prev) => [...prev, ...UnfollowedUserList]);
+      setLeft([...UnfollowedUserList]);
       setIsLoading(false);
     }
   };
@@ -91,8 +90,7 @@ export default function UnfollowerList() {
       (user) => rightChecked.indexOf(user.username) !== -1
     );
 
-    const { unfollowedUsers } = await unfollowUsers(checkedUnfollowedUsers);
-    console.log(unfollowedUsers);
+    await unfollowUsers(checkedUnfollowedUsers);
 
     setRight([...not(right, rightChecked)]);
 

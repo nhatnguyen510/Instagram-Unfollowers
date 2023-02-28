@@ -10,7 +10,6 @@ import Bluebird from "bluebird";
 import inquirer from "inquirer";
 import { writeFileSync, readFileSync, existsSync } from "fs";
 import { ig } from "../APIClient/index.js";
-import CryptoJS from "crypto-js";
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
@@ -35,7 +34,7 @@ export const login = async (req, res) => {
       // decide which method to use
       const verificationMethod = totp_two_factor_on ? "0" : "1"; // default to 1 for SMS
 
-      res.status(200).json({
+      res.status(401).json({
         username,
         totp_two_factor_on,
         two_factor_identifier,
@@ -108,28 +107,6 @@ export const logout = async (req, res) => {
   });
 };
 
-export const encryptUser = async (req, res) => {
-  const { user } = req.body;
-
-  const encryptedUser = CryptoJS.AES.encrypt(
-    JSON.stringify(user),
-    process.env.SECRET_KEY
-  );
-
-  res.status(200).json({ encryptedUser: encryptedUser.toString() });
-};
-
-export const decryptUser = (req, res) => {
-  const { encryptedUser } = req.body;
-
-  const decryptedUser = CryptoJS.AES.decrypt(
-    encryptedUser,
-    process.env.SECRET_KEY
-  ).toString(CryptoJS.enc.Utf8);
-
-  res.status(200).json({ decryptedUser: JSON.parse(decryptedUser) });
-};
-
 async function saveState(ig) {
   // the normal saving of cookies for te instagram-api
   const cookies = await ig.state.serializeCookieJar();
@@ -198,8 +175,6 @@ export const findUnfollowers = async (req, res) => {
 export const unfollowUsers = async (req, res) => {
   const { notFollowingYou } = req.body;
   const unfollowedUsers = [];
-
-  console.log(notFollowingYou);
 
   for (const user of notFollowingYou) {
     await ig.friendship.destroy(user.pk);
