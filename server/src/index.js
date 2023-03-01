@@ -9,6 +9,8 @@ import helmet from "helmet";
 
 const app = express();
 
+const PORT = process.env.API_PORT || 5000;
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan("dev"));
@@ -21,6 +23,6 @@ app.use(
 
 app.use("/api/v1", router);
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
   console.log("App listened at http://localhost:5000");
 });
