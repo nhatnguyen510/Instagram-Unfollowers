@@ -9,6 +9,10 @@ import {
 
 const userRoute = Router();
 
+userRoute.get("/", (req, res) => {
+  res.send("Hello");
+});
+
 userRoute.post("/login", login);
 
 userRoute.post("/two_factor_login", loginWithTwoFactors);
