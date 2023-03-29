@@ -84,7 +84,7 @@ export const loginWithTwoFactors = async (req, res) => {
 
     res.status(200).json({
       message: "Login 2FA Successfully!!!",
-      data,
+      ...data,
     });
   }).catch(IgResponseError, (e) => {
     res.status(400).json({

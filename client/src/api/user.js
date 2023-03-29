@@ -11,6 +11,14 @@ export const loginUser = async (username, password) => {
   return data;
 };
 
+export const loginWithTwoFactors = async (user) => {
+  const { data } = await axios.post(`${SERVER_API}/two_factor_login`, {
+    ...user,
+  });
+
+  return data;
+};
+
 export const logoutUser = async () => {
   const { data } = await axios.post(`${SERVER_API}/logout`);
 

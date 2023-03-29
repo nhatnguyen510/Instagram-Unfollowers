@@ -4,8 +4,10 @@ export const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
   const [user, setUser] = useState({});
+
   const [isLoading, setIsLoading] = useState(false);
   const isLoggedIn = useRef(false);
+  const twoFactorUser = useRef(null);
 
   useEffect(() => {
     const ParsedUser = JSON.parse(localStorage.getItem("user"));
@@ -33,6 +35,7 @@ const AppProvider = ({ children }) => {
         isLoggedIn,
         isLoading,
         setIsLoading,
+        twoFactorUser,
       }}
     >
       {children}

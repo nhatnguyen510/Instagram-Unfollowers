@@ -39,7 +39,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errMessage, setErrMessage] = useState("");
 
-  const { setUser, isLoading, setIsLoading, isLoggedIn } =
+  const { setUser, isLoading, setIsLoading, isLoggedIn, twoFactorUser } =
     useContext(AppContext);
 
   const navigate = useNavigate();
@@ -50,6 +50,13 @@ const Login = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn.current]);
+
+  useEffect(() => {
+    if (twoFactorUser.current) {
+      navigate("/two-factor");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [twoFactorUser.current]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,8 +69,14 @@ const Login = () => {
 
       isLoggedIn.current = true;
     } catch (e) {
-      let message = e?.response.data.message;
-      setErrMessage(message);
+      console.log(e);
+      if (e?.response?.status === 401) {
+        twoFactorUser.current = { ...e?.response?.data };
+        console.log(twoFactorUser.current);
+      } else {
+        let message = e?.response?.data?.message;
+        setErrMessage(message);
+      }
     }
     setIsLoading(false);
   };
@@ -125,6 +138,7 @@ const Login = () => {
               </Typography>
               <Box
                 component="form"
+                action="/login"
                 noValidate
                 sx={{ mt: 1 }}
                 onSubmit={handleSubmit}
