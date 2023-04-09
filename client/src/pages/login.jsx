@@ -118,9 +118,20 @@ const Login = () => {
             component={Paper}
             elevation={0}
             square
-            p={6}
+            p={5}
           >
-            <Title />
+            <Typography
+              sx={{
+                fontSize: {
+                  md: 40,
+                  sm: 30,
+                  xs: 25,
+                },
+                fontWeight: "bold",
+              }}
+            >
+              <Title />
+            </Typography>
 
             <Box
               sx={{
@@ -133,7 +144,15 @@ const Login = () => {
               <Typography component="h1" variant="h6">
                 Welcome
               </Typography>
-              <Typography component="h1" variant="h5" fontWeight="bold">
+              <Typography
+                sx={{
+                  fontSize: {
+                    md: 30,
+                    xs: 20,
+                  },
+                }}
+                fontWeight="bold"
+              >
                 Login To Your Account
               </Typography>
               <Box
